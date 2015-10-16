@@ -9,25 +9,25 @@ import (
 )
 
 var (
-	// Declare a function that processes a texting task
+	// Declare a function that processes a "texting" task
 	exText = func(to string, text string, wrkr string) {
 		fmt.Printf("\n\nSending Text Message to: %v\nMessage -> %v\n---\nProcessed by worker: %v\n\n", to, text, wrkr)
 	}
 
-	// Declare a function that processes an emailing task
+	// Declare a function that processes an "emailing" task
 	exEmail = func(to string, body string, wrkr string) {
 		fmt.Printf("\n\nSending Email Message to: %v\nMessage -> %v\n---\nProcessed by worker: %v\n\n", to, body, wrkr)
 	}
 )
 
-// Define a struct type that will describe a job to be processed
+// inItem defines a struct type that will describe a job to be processed
 type inItem struct {
 	Task func(string, string, string)
 	To   string
 	Text string
 }
 
-// Function worker works on a channel (or queue) of
+// procJobs works on a channel (or queue) of jobs
 func procJob(jobs <-chan inItem, idWrker string) {
 	for job := range jobs {
 		// Execute the task referred to by the inbound job
@@ -39,6 +39,7 @@ func procJob(jobs <-chan inItem, idWrker string) {
 }
 
 func main() {
+	// Load testing data
 	loadErr := loadTstData("files/loaddata.toml")
 	if loadErr != nil {
 		log.Fatal("ERROR: loading the testing data.  Stopping.")
@@ -47,7 +48,7 @@ func main() {
 	// Create a channel (queue) that will contain jobs to be executed
 	jobs := make(chan inItem)
 
-	// Create a Waitgroup that indicate if workers are still running
+	// Create a Waitgroup that indicates if workers are still running
 	var wg sync.WaitGroup
 
 	// Spawn three workers
