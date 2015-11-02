@@ -116,6 +116,7 @@ func main() {
 
 	// Wait until the workers complete
 	wg.Wait()
+	wgMetrics.Wait()
 
 	// Print out metrics to the log
 	fmt.Printf("\n\n*********** PRINT OUT METRICS FOR EACH WORKER *************\n")
